@@ -8,16 +8,16 @@ KERNEL_OFFSET equ 0x1000			;the memory offset to which our kernel will be loaded
 main:
 	mov [BOOT_DRIVE], dl			;get the bootdrive location from dl
 
-	mov bp, 0x9000					;set the stack sufficiently far from 0x7c00
+	mov bp, 0x9000				;set the stack sufficiently far from 0x7c00
 	mov sp, bp
 
 	mov bx, MSG_REAL_MODE			;announce that we are in 16-bit real mode
 	call print_string_16
 
-	call load_kernel				;load the kernel before we enter 32-bit protected mode
-	call protected_mode				;switch to 32-bit protected mode
+	call load_kernel			;load the kernel before we enter 32-bit protected mode
+	call protected_mode			;switch to 32-bit protected mode
 
-	jmp $							;in case something goes wrong -- hang
+	jmp $					;in case something goes wrong -- hang
 
 ;various assembler routines
 %include "boot/print_string_16.asm"
@@ -29,7 +29,7 @@ main:
 [bits 16]
 load_kernel:
 	mov bx, KERNEL_OFFSET			;load at our predefined offset
-	mov dh, 15						;load 15 sectors (the kernel)
+	mov dh, 15				;load 15 sectors (the kernel)
 	mov dl, [BOOT_DRIVE]			;load from the disk
 	call disk_load
 
@@ -43,9 +43,9 @@ BEGIN_PROTECTED_MODE:
 	mov ebx, MSG_PROTECTED_MODE		;announce that we are in 32-bit protected mode
 	call print_string_32
 
-	call KERNEL_OFFSET				;jump to the address of the previously loaded kernel
+	call KERNEL_OFFSET			;jump to the address of the previously loaded kernel
 
-	jmp $							;hang
+	jmp $					;hang
 
 ;BOOT_DRIVE location initialiser
 BOOT_DRIVE			db 0
